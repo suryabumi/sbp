@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg: #f6f9f9;
+    --panel: #ffffff;
+    --ink: #0f1e20;
+    --mute: #5b6e70;
+    --line: #dfeceb;
+    --teal: #00796f;
+    --teal2: #0390b5;
+    --soft: #e9f8f3;
+    --ok: #0f8a4a;
+    --warn: #c27a00;
+    --red: #e23b3b;
+  }
+
+  * {
+    box-sizing: border-box;
+    min-width: 0;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--bg);
+    color: var(--ink);
+    font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  button {
+    font: inherit;
+    cursor: pointer;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--teal2);
+    outline-offset: 2px;
+  }
+}
+
+@keyframes micPulse {
+  50% {
+    box-shadow: 0 0 0 10px rgba(226, 59, 59, 0.14);
+  }
+}
+
+.mic-pulse {
+  animation: micPulse 1.2s infinite;
+}

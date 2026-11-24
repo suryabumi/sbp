@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Studi Suara & DASS-21</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+:root{--bg:#f6f9f9;--panel:#fff;--ink:#0f1e20;--mute:#5b6e70;--line:#dfeceb;--teal:#00796f;--teal2:#0390b5;--soft:#e9f8f3;--ok:#0f8a4a;--warn:#c27a00;--red:#e23b3b}
+*{box-sizing:border-box;min-width:0}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Plus Jakarta Sans",system-ui,sans-serif}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--teal2);outline-offset:2px}
+header{display:flex;align-items:center;gap:14px;padding:12px 20px;background:var(--panel);border-bottom:1px solid var(--line);height:68px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;line-height:1.1}
+.logo i{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--teal),var(--teal2));display:grid;place-items:center}
+.logo small{display:block;color:var(--teal);font-size:12px;letter-spacing:.08em}
+.sp{flex:1}
+.help{background:var(--red);color:#fff;border:0;border-radius:999px;padding:10px 20px;font-weight:800;letter-spacing:.06em;min-height:44px}
+.who{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:16px;padding:6px 8px 6px 14px;font-size:12px;color:var(--mute);text-align:right;line-height:1.2}
+.who b{display:block;color:var(--ink);font-size:15px}.who span.av{width:38px;height:38px;border-radius:12px;background:var(--teal);color:#fff;display:grid;place-items:center;font-weight:800;font-size:15px}
+.app{display:grid;grid-template-columns:240px minmax(0,1fr);height:calc(100vh - 68px)}
+nav{background:var(--panel);border-right:1px solid var(--line);padding:20px 14px;display:flex;flex-direction:column;gap:4px}
+nav button{display:flex;align-items:center;gap:12px;border:0;background:none;color:var(--ink);text-align:left;padding:12px 14px;border-radius:14px;min-height:50px;font-weight:500}
+nav svg{width:20px;height:20px;flex:none;color:var(--mute)}
+nav button[aria-current=true]{background:var(--soft);color:var(--teal);font-weight:700}nav button[aria-current=true] svg{color:var(--teal)}
+.status{margin-top:auto;background:var(--soft);border-radius:14px;padding:14px;font-size:12px;color:var(--teal);font-weight:800;letter-spacing:.08em}
+.status b{display:block;color:var(--ink);font-size:14px;letter-spacing:0;margin-top:4px}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;background:var(--mute)}
+main{overflow:auto}
+.page{padding:clamp(18px,3vw,36px);max-width:1080px;margin:0 auto}
+.hero{background:linear-gradient(120deg,var(--teal),var(--teal2));color:#fff;border-radius:24px;padding:clamp(22px,3.5vw,40px)}
+.hero p.k{margin:0 0 6px;font-weight:800;letter-spacing:.18em;font-size:13px;opacity:.9}
+.hero h1{margin:0 0 10px;font-size:clamp(26px,4vw,38px);line-height:1.1}
+.hero p{margin:0;max-width:66ch;opacity:.95}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));gap:18px;margin-top:20px}
+.tile{background:var(--soft);border:1px solid var(--line);border-radius:22px;padding:24px;display:flex;flex-direction:column;gap:8px}
+.tile h3{margin:4px 0 0;font-size:21px}.tile p{margin:0;color:var(--mute)}
+.tile .ic{width:54px;height:54px;border-radius:16px;background:#fff;border:1px solid var(--line);display:grid;place-items:center}
+.tile .foot{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);margin-top:auto;padding-top:14px;font-size:13px;color:var(--teal);font-weight:800;letter-spacing:.06em}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:clamp(18px,3vw,28px);margin-top:20px}
+.btn{border:0;border-radius:14px;padding:12px 22px;min-height:48px;font-weight:800;background:var(--teal);color:#fff}
+.btn.ghost{background:#fff;color:var(--teal);border:1.5px solid var(--line)}
+.btn.danger{background:#fff;color:var(--red);border:1.5px solid #f3c7c7}
+.btn.sm{min-height:38px;padding:7px 14px;font-size:14px;border-radius:11px}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.link{border:0;background:none;color:var(--teal);font-weight:800;padding:8px 0;min-height:44px}
+/* chat */
+.chat{display:grid;grid-template-columns:330px minmax(0,1fr);height:100%}
+.hist{border-right:1px solid var(--line);background:var(--panel);padding:24px 20px;overflow:auto}
+.hist h2{margin:0 0 18px;font-size:22px}
+.new{width:100%;border:0;border-radius:16px;background:var(--teal);color:#fff;font-weight:800;letter-spacing:.06em;min-height:56px;box-shadow:0 8px 18px #00796f33}
+.sess{display:block;width:100%;text-align:left;border:1px solid var(--line);background:#fff;border-radius:16px;padding:14px 18px;margin-top:12px;color:var(--ink)}
+.sess b{display:block}.sess small{color:var(--mute);font-weight:700;letter-spacing:.08em}
+.sess[aria-current=true]{background:var(--soft);border-color:#9fdccf}
+.pill{display:inline-block;font-size:11px;font-weight:800;padding:2px 8px;border-radius:999px;margin-left:6px;vertical-align:2px;background:#fff3d6;color:var(--warn)}.pill.ok{background:#dcf5e6;color:var(--ok)}
+.room{display:flex;flex-direction:column;height:100%;min-height:0}
+.top{display:flex;align-items:center;gap:14px;padding:14px 24px;border-bottom:1px solid var(--line);background:var(--panel);flex-wrap:wrap}
+.top b{font-size:19px;display:block;line-height:1.2}.top small{color:var(--mute);font-weight:800;letter-spacing:.12em;font-size:12px}
+.top small::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ok);margin-right:6px}
+.chip{border:1.5px solid var(--line);background:#fff;color:var(--teal);border-radius:14px;padding:9px 16px;font-weight:800;letter-spacing:.08em;font-size:13px;min-height:44px}
+.msgs{flex:1;overflow:auto;padding:24px clamp(14px,3vw,40px);display:flex;flex-direction:column;gap:12px}
+.welcome{text-align:center;margin:auto;max-width:440px;color:var(--mute)}.welcome h3{color:var(--ink);font-size:26px;margin:14px 0 6px}
+.m{display:flex;gap:10px;max-width:min(680px,92%)}
+.m .bub{background:#fff;border:1px solid var(--line);border-radius:18px 18px 18px 6px;padding:12px 16px}
+.m.me{align-self:flex-end;flex-direction:row-reverse}.m.me .bub{background:var(--teal);color:#fff;border:0;border-radius:18px 18px 6px 18px}
+.m .bub p{margin:0}.m .bub p+p{margin-top:6px}
+.passage{background:var(--soft);border-left:4px solid var(--teal);padding:12px 14px;border-radius:10px;margin-top:8px;font-size:18px;line-height:1.7;color:var(--ink)}
+.task{font-size:12px;font-weight:800;letter-spacing:.1em;color:var(--teal)}
+.m.me audio{width:260px;max-width:100%;height:38px;display:block;margin-top:6px}
+.q{font-size:12px;opacity:.9;margin-top:4px}
+.bar{border-top:1px solid var(--line);background:var(--panel);padding:16px clamp(14px,3vw,40px)}
+.rec{display:flex;align-items:center;gap:14px}
+.pillbox{flex:1;border:2px solid #b5e5dc;border-radius:999px;min-height:64px;display:flex;align-items:center;padding:0 22px;gap:14px;color:var(--mute);background:#fff}
+.pillbox canvas{flex:1;height:40px;width:100%}
+.timer{font-variant-numeric:tabular-nums;font-weight:800;color:var(--ink);white-space:nowrap}
+.mic{width:68px;height:68px;border-radius:22px;border:0;background:var(--teal);color:#fff;display:grid;place-items:center;flex:none;box-shadow:0 8px 18px #00796f44}
+.mic.on{background:var(--red);animation:pulse 1.2s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 10px #e23b3b22}}
+.qr{display:flex;flex-wrap:wrap;gap:10px}
+.qr button{border:1.5px solid #9fdccf;background:#fff;color:var(--ink);border-radius:999px;padding:10px 18px;min-height:46px;font-weight:600}
+.qr button b{color:var(--teal);margin-right:6px}
+.qr button:hover{background:var(--soft)}
+.prev{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.prev audio{height:40px;flex:1;min-width:220px}
+.warn{color:var(--warn);font-size:14px;font-weight:600;margin-top:8px}
+.err{color:var(--red);font-size:14px;font-weight:600;margin-top:8px}
+.prog{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--mute);font-weight:700;margin-bottom:10px}
+.prog .tr{flex:1;height:6px;background:var(--line);border-radius:9px;overflow:hidden}.prog .tr i{display:block;height:100%;background:linear-gradient(90deg,var(--teal),var(--teal2))}
+/* forms, tables */
+label.f{display:block;font-weight:700;font-size:14px;margin:14px 0 6px}
+input,select{width:100%;font:inherit;font-size:16px;padding:11px 14px;border-radius:12px;border:1.5px solid var(--line);background:#fff;color:var(--ink);min-height:48px}
+.row2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:0 16px}
+.check{display:flex;gap:12px;align-items:flex-start;margin-top:16px}.check input{width:22px;height:22px;min-height:0;flex:none;margin-top:2px}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}th{color:var(--mute);font-weight:700}td.n,th.n{text-align:right}
+.scroll{overflow-x:auto}
+.meter{margin-top:14px}.meter .t{display:flex;justify-content:space-between;font-weight:700;gap:8px;flex-wrap:wrap}.meter .t span{color:#fff;border-radius:999px;padding:1px 10px;font-size:13px}
+.track{height:10px;background:var(--line);border-radius:9px;margin-top:6px;overflow:hidden}.track i{display:block;height:100%}
+.alert{border-left:4px solid var(--red);background:#fff1f1;padding:12px 14px;border-radius:10px;margin-top:10px}
+dialog{border:0;border-radius:22px;padding:26px;width:min(560px,94vw);max-height:90vh;overflow:auto}dialog::backdrop{background:#0b1a1c99}
+dialog h3{margin-top:0}
+.acts{display:flex;justify-content:flex-end;gap:10px;margin-top:20px;flex-wrap:wrap}
+.note{font-size:14px;color:var(--mute)}
+@media(max-width:980px){.chat{grid-template-columns:1fr}.hist{display:none}.chat.list .hist{display:block}.chat.list .room{display:none}}
+@media(max-width:760px){.app{grid-template-columns:1fr;grid-template-rows:auto 1fr}nav{flex-direction:row;overflow-x:auto;border-right:0;border-bottom:1px solid var(--line);padding:8px}nav button{flex:none}.status,.who{display:none}header{height:auto}.app{height:auto;min-height:calc(100vh - 68px)}.chat{height:calc(100vh - 140px)}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><i><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M4 10v4M8 7v10M12 4v16M16 8v8M20 11v2"/></svg></i><div>STUDI SUARA<small>DATA COLLECTION</small></div></div>
+  <span class="sp"></span>
+  <button class="help" id="helpBtn">BUTUH BANTUAN</button>
+  <div class="who"><div>RESPONDEN AKTIF<b id="whoCode">–</b></div><span class="av" id="whoAv">?</span></div>
+</header>
+<div class="app">
+  <nav id="nav">
+    <button data-v="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Beranda</button>
+    <button data-v="sesi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>Sesi rekam</button>
+    <button data-v="data"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Data &amp; ekspor</button>
+    <button data-v="set"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Pengaturan</button>
+    <div class="status">STATUS SISTEM<b><span class="dot" id="micDot"></span><span id="micText">Mikrofon belum dicek</span></b></div>
+  </nav>
+  <main id="view"></main>
+</div>
+
+<dialog id="dlgHelp"><h3>Butuh bicara dengan seseorang?</h3>
+<p>Jika kamu merasa tertekan atau tidak aman, sampaikan kepada peneliti yang mendampingimu, hubungi konselor kampus, atau layanan kesehatan jiwa Kemenkes di <b>119 ext. 8</b>. Dalam keadaan darurat hubungi <b>112</b>.</p>
+<p class="note">Kamu boleh menghentikan sesi kapan saja tanpa konsekuensi apa pun.</p>
+<div class="acts"><button class="btn" data-close>Tutup</button></div></dialog>
+
+<dialog id="dlgNew"><h3>Sesi baru</h3>
+<p class="note" style="margin-top:0">Penelitian ini mengkaji hubungan karakteristik suara dengan kondisi depresi, kecemasan, dan stres. Responden akan merekam beberapa tugas bicara (±6 menit) dan mengisi DASS-21 (±5 menit).</p>
+<ul class="note"><li>Partisipasi sukarela dan dapat dihentikan kapan saja.</li><li>Rekaman suara dan jawaban disimpan dengan kode, tanpa nama.</li><li>Hasil skrining DASS-21 bukan diagnosis.</li></ul>
+<label class="check"><input type="checkbox" id="nCons"><span>Responden telah membaca informasi di atas dan menyetujui perekaman suara serta pengisian kuesioner.</span></label>
+<div class="row2">
+<div><label class="f" for="nCode">Kode responden *</label><input id="nCode" placeholder="R-001" autocomplete="off"></div>
+<div><label class="f" for="nAge">Usia *</label><input id="nAge" type="number" min="15" max="99" inputmode="numeric"></div>
+<div><label class="f" for="nSex">Jenis kelamin *</label><select id="nSex"><option value="">Pilih…</option><option>Laki-laki</option><option>Perempuan</option></select></div>
+<div><label class="f" for="nLang">Bahasa ibu</label><input id="nLang" placeholder="mis. Bali, Jawa, Indonesia"></div>
+<div><label class="f" for="nInst">Institusi</label><input id="nInst"></div>
+<div><label class="f" for="nMic">Perangkat / mikrofon</label><input id="nMic" placeholder="mis. headset USB, mic laptop"></div>
+</div>
+<p class="err" id="nErr"></p>
+<div class="acts"><button class="btn ghost" data-close>Batal</button><button class="btn" id="nStart">Mulai sesi</button></div></dialog>
+
+<dialog id="dlgConfirm"><h3 id="cTitle"></h3><p id="cBody"></p><div class="acts"><button class="btn ghost" data-close>Batal</button><button class="btn danger" id="cOk">Hapus</button></div></dialog>
+
+<script>
+{
+/* ---------- konten ---------- */
+const GUIDE="Kak Nara";
+const PASSAGE="Pagi itu langit di atas kota tampak cerah. Budi berjalan pelan menuju pasar sambil membawa keranjang bambu. Di sepanjang jalan ia melihat penjual sayur, tukang roti, dan anak-anak yang bermain bola. Setelah membeli ikan, beras, dan buah jeruk, ia duduk sejenak di bawah pohon besar, lalu pulang sebelum matahari terasa panas.";
+const TASKS=[
+ {id:"T1_vokal_a",name:"Vokal panjang /a/",min:4,msg:["Kita mulai dengan pemanasan.","Tarik napas, lalu ucapkan bunyi <b>“aaaa…”</b> dengan nada dan kekerasan yang nyaman, selama mungkin dalam satu napas (minimal 4 detik)."]},
+ {id:"T2_membaca",name:"Membaca teks",min:12,msg:["Bagus! Sekarang bacalah teks berikut dengan suara dan kecepatan seperti biasa."],passage:true},
+ {id:"T3_hitung",name:"Menghitung 1–20",min:6,msg:["Selanjutnya, hitunglah dari <b>satu sampai dua puluh</b> dengan tempo biasa."]},
+ {id:"T4_minggu_ini",name:"Cerita: seminggu terakhir",min:45,msg:["Sekarang bagian bercerita. Tidak ada jawaban benar atau salah.","<b>Ceritakan bagaimana perasaan dan keseharianmu selama satu minggu terakhir.</b> Misalnya tentang tidur, kuliah atau pekerjaan, dan hal yang membuatmu senang atau terbebani. Usahakan sekitar 1 menit."]},
+ {id:"T5_positif",name:"Cerita: pengalaman menyenangkan",min:30,msg:["Terima kasih sudah berbagi.","<b>Ceritakan satu pengalaman menyenangkan yang kamu alami baru-baru ini.</b> Apa yang terjadi, dengan siapa, dan bagaimana rasanya? Sekitar 30–60 detik."]},
+ {id:"T6_rencana",name:"Cerita: rencana ke depan",min:30,msg:["Terakhir untuk bagian suara:","<b>Ceritakan rencana atau harapanmu untuk beberapa bulan ke depan.</b> Sekitar 30–60 detik."]}
+];
+const ITEMS=[["S","Saya merasa sulit untuk menenangkan diri"],["A","Saya menyadari mulut saya terasa kering"],["D","Saya sama sekali tidak dapat merasakan perasaan positif"],["A","Saya mengalami kesulitan bernapas (misalnya napas cepat atau terengah-engah padahal tidak sedang beraktivitas fisik)"],["D","Saya merasa sulit untuk memulai inisiatif melakukan sesuatu"],["S","Saya cenderung bereaksi berlebihan terhadap suatu situasi"],["A","Saya mengalami gemetar (misalnya pada tangan)"],["S","Saya merasa banyak menghabiskan energi karena cemas"],["A","Saya khawatir dengan situasi yang mungkin membuat saya panik dan mempermalukan diri sendiri"],["D","Saya merasa tidak ada hal yang dapat saya harapkan di masa depan"],["S","Saya mendapati diri saya mudah gelisah"],["S","Saya merasa sulit untuk bersantai"],["D","Saya merasa sedih dan murung"],["S","Saya tidak dapat memaklumi hal apa pun yang menghalangi saya menyelesaikan apa yang sedang saya lakukan"],["A","Saya merasa hampir panik"],["D","Saya tidak dapat merasa antusias terhadap hal apa pun"],["D","Saya merasa tidak berharga sebagai seorang manusia"],["S","Saya merasa mudah tersinggung"],["A","Saya menyadari detak jantung saya padahal tidak sedang beraktivitas fisik (misalnya denyut meningkat atau tidak beraturan)"],["A","Saya merasa takut tanpa alasan yang jelas"],["D","Saya merasa hidup ini tidak berarti"]];
+const SCALE=["Tidak pernah","Kadang-kadang","Sering","Hampir selalu"];
+const NAMES={D:"Depresi",A:"Kecemasan",S:"Stres"},CUT={D:[9,13,20,27],A:[7,9,14,19],S:[14,18,25,33]};
+const LEV=["Normal","Ringan","Sedang","Berat","Sangat berat"],LCOL=["#0f8a4a","#7aa514","#d08a00","#e2612b","#c81e1e"];
+
+/* ---------- util ---------- */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmtD=t=>new Date(t).toLocaleDateString("id-ID",{day:"numeric",month:"short",year:"numeric"});
+const fmtT=s=>{s=Math.max(0,Math.floor(s));return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")};
+const stamp=t=>new Date(t).toISOString().slice(0,16).replace(/[-:T]/g,"");
+const lsGet=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}};
+const lsSet=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const cfg=Object.assign({sr:16000,order:"speech",showResult:false,study:"Studi Suara dan Kesejahteraan Psikologis"},lsGet("ss-cfg",{}));
+function score(ans){const raw={D:0,A:0,S:0};ans.forEach((v,i)=>raw[ITEMS[i][0]]+=v||0);const lv={};for(const k in raw){raw[k]*=2;lv[k]=CUT[k].filter(c=>raw[k]>c).length}return{raw,lv}}
+
+/* ---------- IndexedDB ---------- */
+let idb;
+const openDB=()=>new Promise((res,rej)=>{const r=indexedDB.open("studi-suara",1);r.onupgradeneeded=()=>r.result.createObjectStore("sessions",{keyPath:"id"});r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});
+const tx=(mode,fn)=>new Promise((res,rej)=>{const t=idb.transaction("sessions",mode);const s=t.objectStore("sessions");const r=fn(s);t.oncomplete=()=>res(r&&r.result);t.onerror=()=>rej(t.error)});
+const saveS=s=>tx("readwrite",st=>st.put(s)).catch(e=>console.error(e));
+const delS=id=>tx("readwrite",st=>st.delete(id));
+const allS=()=>tx("readonly",st=>st.getAll());
+
+/* ---------- state ---------- */
+const st={view:"sesi",sessions:[],cur:null,pending:null,recording:false,err:"",list:false};
+const curS=()=>st.sessions.find(s=>s.id===st.cur);
+function buildSteps(order){
+ const sp=[{t:"say",m:[`Halo, aku ${GUIDE}! Terima kasih sudah mau ikut penelitian ini.`,"Pertama kita akan merekam suaramu. Cari posisi yang nyaman, jaga jarak mulut ke mikrofon sekitar 20–30 cm, dan usahakan ruangan tenang.","Tekan tombol mikrofon untuk mulai, dan tekan lagi untuk berhenti."]},...TASKS.map((t,i)=>({t:"rec",i}))];
+ const dq=[{t:"say",m:[order==="speech"?"Bagian suara selesai. Terima kasih!":`Halo, aku ${GUIDE}! Terima kasih sudah mau ikut penelitian ini.`,"Sekarang ada 21 pernyataan singkat. Pilih jawaban yang paling sesuai dengan yang kamu alami <b>selama satu minggu terakhir</b>."]},...ITEMS.map((_,i)=>({t:"dass",i}))];
+ if(order==="dass"){dq.push({t:"say",m:["Terima kasih! Sekarang kita lanjut merekam suaramu. Jaga jarak mulut ke mikrofon sekitar 20–30 cm dan usahakan ruangan tenang."]});return[...dq,...sp.slice(1),{t:"end"}]}
+ return[...sp,...dq,{t:"end"}]}
+function stepAt(s){return s.steps[s.idx]}
+
+/* ---------- engine ---------- */
+function advance(s){
+ while(true){const step=stepAt(s);if(!step)return;
+  if(step.t==="say"){step.m.forEach(m=>s.log.push({w:"bot",h:m}));s.idx++;continue}
+  if(step.t==="rec"&&!step.asked){const T=TASKS[step.i];T.msg.forEach((m,j)=>s.log.push({w:"bot",h:m,task:j===0?`Tugas ${step.i+1}/${TASKS.length} · ${T.name}`:null,passage:T.passage&&j===T.msg.length-1}));step.asked=true;return}
+  if(step.t==="dass"&&!step.asked){s.log.push({w:"bot",h:esc(ITEMS[step.i][1]),task:`DASS-21 · ${step.i+1}/21`});step.asked=true;return}
+  if(step.t==="end"&&!s.done){s.done=true;s.finishedAt=Date.now();s.dass=score(s.ans);
+   s.log.push({w:"bot",h:"Sesi selesai. Terima kasih banyak atas waktumu!"});
+   if(cfg.showResult)s.log.push({w:"bot",h:"Ringkasan skrining DASS-21 (bukan diagnosis): "+["D","A","S"].map(k=>`${NAMES[k]} <b>${s.dass.raw[k]}</b> (${LEV[s.dass.lv[k]]})`).join(", ")+"."});
+   const sev=s.dass.lv.D>=3||s.ans[20]>=2||s.ans[16]>=2;
+   if(sev)s.log.push({w:"bot",h:"Beberapa jawabanmu menunjukkan kamu mungkin sedang melalui masa yang berat. Kamu tidak sendirian. Sampaikan kepada peneliti yang mendampingimu, atau hubungi konselor maupun layanan 119 ext. 8.",alert:true});
+   return}
+  return}}
+
+/* ---------- audio ---------- */
+let ctx,stream,srcNode,proc,analyser,chunks=[],t0=0,raf,tick;
+async function startRec(){
+ st.err="";
+ try{stream=await navigator.mediaDevices.getUserMedia({audio:{channelCount:1,echoCancellation:false,noiseSuppression:false,autoGainControl:false}})}
+ catch(e){st.err=location.protocol==="file:"||location.protocol==="https:"||location.hostname==="localhost"?"Akses mikrofon ditolak. Izinkan mikrofon di pengaturan browser lalu coba lagi.":"Mikrofon hanya bisa dipakai lewat HTTPS atau localhost.";setMic(false,"Mikrofon tidak tersedia");renderBar();return}
+ ctx=new (window.AudioContext||window.webkitAudioContext)();await ctx.resume();
+ srcNode=ctx.createMediaStreamSource(stream);analyser=ctx.createAnalyser();analyser.fftSize=2048;
+ proc=ctx.createScriptProcessor(4096,1,1);chunks=[];
+ proc.onaudioprocess=e=>chunks.push(new Float32Array(e.inputBuffer.getChannelData(0)));
+ srcNode.connect(analyser);srcNode.connect(proc);proc.connect(ctx.destination);
+ st.recording=true;t0=performance.now();setMic(true,"Mikrofon aktif · merekam");renderBar();draw();
+ tick=setInterval(()=>{const el=$("#timer");if(el)el.textContent=fmtT((performance.now()-t0)/1000)},250)}
+async function stopRec(){
+ clearInterval(tick);cancelAnimationFrame(raf);st.recording=false;
+ proc.disconnect();srcNode.disconnect();stream.getTracks().forEach(t=>t.stop());
+ const srcRate=ctx.sampleRate;await ctx.close();
+ const len=chunks.reduce((a,c)=>a+c.length,0),pcm=new Float32Array(len);let o=0;for(const c of chunks){pcm.set(c,o);o+=c.length}
+ let out=pcm,sr=srcRate;
+ if(cfg.sr&&+cfg.sr!==srcRate&&len){const n=Math.ceil(len*cfg.sr/srcRate);const off=new OfflineAudioContext(1,n,+cfg.sr);const b=off.createBuffer(1,len,srcRate);b.copyToChannel(pcm,0);const s=off.createBufferSource();s.buffer=b;s.connect(off.destination);s.start();out=(await off.startRendering()).getChannelData(0);sr=+cfg.sr}
+ let peak=0,sum=0;for(const v of out){const a=Math.abs(v);if(a>peak)peak=a;sum+=v*v}
+ const rms=Math.sqrt(sum/(out.length||1));
+ st.pending={blob:wav(out,sr),dur:out.length/sr,sr,peak:+peak.toFixed(3),rmsDb:+(20*Math.log10(rms||1e-9)).toFixed(1),srcRate,ts:Date.now()};
+ setMic(true,"Mikrofon siap");renderBar()}
+function wav(f,sr){const b=new ArrayBuffer(44+f.length*2),v=new DataView(b);const w=(o,s)=>{for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i))};
+ w(0,"RIFF");v.setUint32(4,36+f.length*2,true);w(8,"WAVE");w(12,"fmt ");v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,sr,true);v.setUint32(28,sr*2,true);v.setUint16(32,2,true);v.setUint16(34,16,true);w(36,"data");v.setUint32(40,f.length*2,true);
+ for(let i=0;i<f.length;i++){const s=Math.max(-1,Math.min(1,f[i]));v.setInt16(44+i*2,s<0?s*0x8000:s*0x7fff,true)}return new Blob([b],{type:"audio/wav"})}
+function draw(){const c=$("#wave");if(c&&analyser){const W=c.width=c.clientWidth*devicePixelRatio,H=c.height=c.clientHeight*devicePixelRatio,g=c.getContext("2d"),d=new Float32Array(analyser.fftSize);analyser.getFloatTimeDomainData(d);
+ g.clearRect(0,0,W,H);g.strokeStyle="#00796f";g.lineWidth=2*devicePixelRatio;g.beginPath();for(let i=0;i<d.length;i+=4){const x=i/d.length*W,y=H/2+d[i]*H*1.6;i?g.lineTo(x,y):g.moveTo(x,y)}g.stroke()}
+ raf=requestAnimationFrame(draw)}
+function quality(r,min){const w=[];if(r.dur<min)w.push(`Durasi ${r.dur.toFixed(1)} dtk, kurang dari ${min} dtk yang disarankan.`);if(r.peak>=0.99)w.push("Suara terpotong (clipping). Jauhkan mikrofon sedikit.");if(r.rmsDb<-45)w.push("Suara terlalu pelan. Dekatkan mikrofon atau bicara lebih keras.");return w}
+function setMic(ok,t){$("#micDot").style.background=ok?"var(--ok)":"var(--warn)";$("#micText").textContent=t}
+const urls=new Map();const urlOf=b=>{if(!urls.has(b))urls.set(b,URL.createObjectURL(b));return urls.get(b)};
+
+/* ---------- views ---------- */
+function home(){const S=st.sessions,done=S.filter(s=>s.done).length,nrec=S.reduce((a,s)=>a+Object.keys(s.recs||{}).length,0);
+ const tile=(ic,title,desc,foot,go,lbl)=>`<div class="tile"><span class="ic">${ic}</span><h3>${title}</h3><p>${desc}</p><div class="foot"><span>${foot}</span><button class="link" data-go="${go}">${lbl} →</button></div></div>`;
+ return`<div class="page"><section class="hero"><p class="k">PUSAT PENGAMBILAN DATA</p><h1>${esc(cfg.study)}</h1><p>Setiap sesi berisi ${TASKS.length} tugas rekaman suara dan kuesioner DASS-21, dipandu ${GUIDE} dalam format percakapan. Semua data tersimpan di browser perangkat ini sampai Anda mengekspornya.</p></section>
+ <div class="grid">${tile(`<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#00796f" stroke-width="2"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>`,"Sesi rekam suara",`Vokal panjang, membaca teks, menghitung, dan tiga tugas bercerita. WAV mono ${cfg.sr/1000} kHz, 16-bit.`,`${nrec} REKAMAN`,"sesi","Mulai")}
+ ${tile(`<svg width="26" height="26" viewBox="0 0 24 24"><rect x="4" y="12" width="4" height="8" fill="#0f8a4a"/><rect x="10" y="6" width="4" height="14" fill="#e23b3b"/><rect x="16" y="9" width="4" height="11" fill="#0390b5"/></svg>`,"Asesmen DASS-21","Mengukur tingkat depresi, kecemasan, dan stres selama satu minggu terakhir, ditanyakan langsung di dalam percakapan.",`${done} SESI LENGKAP`,"data","Kelola")}
+ ${tile(`<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#00796f" stroke-width="2"><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></svg>`,"Ekspor data","Unduh ZIP berisi file WAV, metadata JSON, dan CSV skor DASS-21 per sesi atau seluruh sesi sekaligus.",`${S.length} SESI TERSIMPAN`,"data","Ekspor")}</div></div>`}
+
+function sesi(){const s=curS();
+ return`<div class="chat ${st.list?"list":""}"><aside class="hist"><h2>Riwayat sesi</h2><button class="new" id="newBtn">+ SESI BARU</button>
+ ${st.sessions.slice().sort((a,b)=>b.createdAt-a.createdAt).map(x=>`<button class="sess" data-s="${esc(x.id)}" aria-current="${x.id===st.cur}"><b>${esc(x.meta.code)}<span class="pill ${x.done?"ok":""}">${x.done?"Selesai":"Berjalan"}</span></b><small>${esc(fmtD(x.createdAt).toUpperCase())}</small></button>`).join("")||`<p class="note" style="margin-top:16px">Belum ada sesi.</p>`}</aside>
+ <section class="room"><div class="top"><button class="chip" id="toList" style="padding:9px 12px" aria-label="Daftar sesi">←</button>${avatar(46)}<div><b>${GUIDE}</b><small>PEMANDU SESI</small></div><span class="sp"></span>
+ ${s?`<span class="note">${esc(s.meta.code)} · ${progress(s)}</span>`:""}<button class="chip" id="newBtn2">SESI BARU</button></div>
+ <div class="msgs" id="msgs">${s?s.log.map(msg).join(""):welcome()}</div><div class="bar" id="bar"></div></section></div>`}
+function avatar(n){return`<svg width="${n}" height="${n}" viewBox="0 0 48 48" style="flex:none"><defs><linearGradient id="g${n}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#00796f"/><stop offset="1" stop-color="#0390b5"/></linearGradient></defs><rect width="48" height="48" rx="${n>60?16:14}" fill="url(#g${n})"/><g stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M12 21v6M18 16v16M24 11v26M30 17v14M36 21v6"/></g></svg>`}
+function welcome(){return`<div class="welcome">${avatar(120)}<h3>Halo, aku ${GUIDE}!</h3><p>Aku memandu responden melalui perekaman suara dan kuesioner DASS-21. Tekan <b>+ Sesi baru</b> untuk memulai.</p></div>`}
+function progress(s){const r=Object.keys(s.recs).length,d=s.ans.filter(v=>v!==null).length;return`${r}/${TASKS.length} rekaman · ${d}/21 DASS`}
+function msg(m){if(m.w==="me"){if(m.rec){const s=curS(),r=s.recs[m.rec];return`<div class="m me"><div class="bub"><div style="font-weight:700">${esc(TASKS.find(t=>t.id===m.rec).name)}</div>${r?`<audio controls src="${urlOf(r.blob)}"></audio><div class="q">${r.dur.toFixed(1)} dtk · ${r.sr/1000} kHz · puncak ${r.peak} · ${r.rmsDb} dBFS</div>`:""}</div></div>`}
+ return`<div class="m me"><div class="bub"><p>${esc(m.t)}</p></div></div>`}
+ return`<div class="m">${avatar(34)}<div class="bub" ${m.alert?'style="border-color:#f3c7c7;background:#fff7f7"':""}>${m.task?`<div class="task">${esc(m.task)}</div>`:""}<p>${m.h}</p>${m.passage?`<div class="passage">${PASSAGE}</div>`:""}</div></div>`}
+
+function renderBar(){const bar=$("#bar");if(!bar)return;const s=curS();
+ if(!s){bar.innerHTML=`<div class="rec"><div class="pillbox">Mulai sesi baru untuk merekam…</div><button class="mic" id="newBtn3" aria-label="Sesi baru"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg></button></div>`;return}
+ const step=stepAt(s);
+ if(s.done){const r=s.dass;bar.innerHTML=`<div class="prev"><span style="flex:1;font-weight:700">Sesi lengkap: ${Object.keys(s.recs).length} rekaman dan DASS-21 tersimpan.</span><button class="btn ghost sm" data-res="${esc(s.id)}">${cfg.showResult?"Lihat hasil":"Hasil (peneliti)"}</button><button class="btn sm" data-zip="${esc(s.id)}">Unduh ZIP sesi</button></div>`;return}
+ if(step.t==="dass"){const n=step.i;bar.innerHTML=`<div class="prog"><span>DASS-21 ${n+1}/21</span><div class="tr"><i style="width:${n/21*100}%"></i></div>${n>0&&stepAt({steps:s.steps,idx:s.idx-1}).t==="dass"?`<button class="link" id="undo">← Ubah jawaban sebelumnya</button>`:""}</div><div class="qr">${SCALE.map((x,v)=>`<button data-a="${v}"><b>${v}</b>${x}</button>`).join("")}</div>`;return}
+ if(step.t==="rec"){const T=TASKS[step.i];
+  if(st.pending){const p=st.pending,w=quality(p,T.min);bar.innerHTML=`<div class="prev"><audio controls src="${urlOf(p.blob)}"></audio><button class="btn ghost" id="retake">Rekam ulang</button><button class="btn" id="send">Simpan &amp; lanjut</button></div>${w.map(x=>`<div class="warn">⚠ ${esc(x)}</div>`).join("")}`;return}
+  bar.innerHTML=`<div class="rec"><div class="pillbox">${st.recording?`<span class="timer" id="timer">00:00</span><canvas id="wave"></canvas><span class="note">min ${T.min} dtk</span>`:`<span>Tekan mikrofon untuk mulai merekam: <b style="color:var(--ink)">${esc(T.name)}</b></span>`}</div>
+  <button class="mic ${st.recording?"on":""}" id="micBtn" aria-label="${st.recording?"Berhenti merekam":"Mulai merekam"}">${st.recording?`<svg width="26" height="26" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2" fill="#fff"/></svg>`:`<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>`}</button></div>${st.err?`<div class="err">${esc(st.err)}</div>`:""}`}}
+
+function data(){const S=st.sessions.slice().sort((a,b)=>a.createdAt-b.createdAt);
+ return`<div class="page"><div class="card"><div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center"><div><h2 style="margin:0">Data &amp; ekspor</h2><p class="note" style="margin:4px 0 0">${S.length} sesi tersimpan di browser ini. Ekspor secara berkala dan simpan cadangannya.</p></div>
+ <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn ghost" id="csvAll">Unduh CSV</button><button class="btn" id="zipAll" ${S.length?"":"disabled"}>Unduh semua (ZIP)</button></div></div>
+ ${S.length?`<div class="scroll" style="margin-top:16px"><table><thead><tr><th>Kode</th><th>Tanggal</th><th class="n">Usia</th><th>JK</th><th>Status</th><th class="n">Rekaman</th><th class="n">Durasi total</th><th class="n">D</th><th class="n">A</th><th class="n">S</th><th></th></tr></thead><tbody>
+ ${S.map(s=>{const d=s.dass,tot=Object.values(s.recs).reduce((a,r)=>a+r.dur,0);return`<tr><td><b>${esc(s.meta.code)}</b></td><td>${esc(fmtD(s.createdAt))}</td><td class="n">${esc(s.meta.age)}</td><td>${esc(s.meta.sex)}</td><td><span class="pill ${s.done?"ok":""}">${s.done?"Selesai":"Berjalan"}</span></td><td class="n">${Object.keys(s.recs).length}/${TASKS.length}</td><td class="n">${fmtT(tot)}</td>
+ ${["D","A","S"].map(k=>`<td class="n">${d?`<span style="color:${LCOL[d.lv[k]]};font-weight:800">${d.raw[k]}</span>`:"–"}</td>`).join("")}<td><button class="btn ghost sm" data-open="${esc(s.id)}">Buka</button> <button class="btn ghost sm" data-res="${esc(s.id)}" ${d?"":"disabled"}>Hasil</button> <button class="btn sm" data-zip="${esc(s.id)}">ZIP</button> <button class="btn danger sm" data-del="${esc(s.id)}">Hapus</button></td></tr>`}).join("")}</tbody></table></div>`:`<p style="margin-top:16px">Belum ada data. <button class="link" data-go="sesi">Mulai sesi pertama →</button></p>`}
+ <div id="res"></div></div>
+ <div class="card"><h3 style="margin-top:0">Struktur file ekspor</h3><p class="note" style="margin:0">Setiap sesi menjadi satu folder <code>KODE_YYYYMMDDHHMM/</code> yang berisi <code>audio/KODE_T1_vokal_a.wav</code> … <code>T6</code>, <code>metadata.json</code> (identitas, perangkat, waktu, durasi, puncak, dan level setiap rekaman), serta <code>dass21.csv</code>. Ekspor semua sesi menambahkan <code>dass21_semua.csv</code> dan <code>rekaman_semua.csv</code>. Kolom <code>file</code> di CSV dapat langsung dipakai untuk ekstraksi fitur (openSMILE, librosa, wav2vec 2.0).</p></div></div>`}
+
+function result(s){const d=s.dass;return`<div class="card" style="background:var(--soft)"><h3 style="margin-top:0">Hasil skrining · ${esc(s.meta.code)}</h3>${["D","A","S"].map(k=>`<div class="meter"><div class="t">${NAMES[k]} · ${d.raw[k]}<span style="background:${LCOL[d.lv[k]]}">${LEV[d.lv[k]]}</span></div><div class="track"><i style="width:${d.raw[k]/42*100}%;background:${LCOL[d.lv[k]]}"></i></div></div>`).join("")}
+ ${d.lv.D>=3||s.ans[20]>=2||s.ans[16]>=2?`<div class="alert">Perlu tindak lanjut: skor depresi tinggi atau butir 17/21 bernilai ≥2. Ikuti protokol rujukan dalam penelitian Anda.</div>`:""}<p class="note">Skor ×2 (setara DASS-42), kategori menurut Lovibond &amp; Lovibond (1995). Ini hasil skrining, bukan diagnosis.</p></div>`}
+
+function settings(){return`<div class="page"><div class="card"><h2 style="margin-top:0">Pengaturan studi</h2>
+ <label class="f" for="sStudy">Judul studi</label><input id="sStudy" value="${esc(cfg.study)}">
+ <div class="row2"><div><label class="f" for="sSr">Frekuensi sampel WAV</label><select id="sSr">${[16000,22050,44100,48000].map(v=>`<option value="${v}" ${+cfg.sr===v?"selected":""}>${v/1000} kHz</option>`).join("")}</select></div>
+ <div><label class="f" for="sOrder">Urutan sesi</label><select id="sOrder"><option value="speech" ${cfg.order==="speech"?"selected":""}>Rekam suara → DASS-21</option><option value="dass" ${cfg.order==="dass"?"selected":""}>DASS-21 → rekam suara</option></select></div></div>
+ <label class="check"><input type="checkbox" id="sShow" ${cfg.showResult?"checked":""}><span>Tampilkan hasil skor DASS-21 kepada responden di akhir sesi</span></label>
+ <p class="note" style="margin-top:18px">Perekaman memakai satu kanal tanpa <i>echo cancellation</i>, <i>noise suppression</i>, maupun <i>auto gain</i> agar sinyal akustik tidak diubah oleh browser. Pengaturan baru berlaku untuk sesi berikutnya.</p>
+ <div class="acts"><button class="btn" id="sSave">Simpan pengaturan</button></div><p class="note" id="sMsg" role="status"></p></div>
+ <div class="card"><h3 style="margin-top:0">Cek mikrofon</h3><p class="note">Rekam 3 detik untuk memastikan mikrofon dan level suara sudah baik sebelum sesi dimulai.</p><button class="btn ghost" id="micTest">Tes mikrofon 3 detik</button><div id="micRes"></div></div></div>`}
+
+function render(){document.querySelectorAll("nav button").forEach(b=>b.setAttribute("aria-current",b.dataset.v===st.view));
+ $("#view").innerHTML=st.view==="home"?home():st.view==="sesi"?sesi():st.view==="data"?data():settings();
+ const s=curS();$("#whoCode").textContent=s?s.meta.code:"–";$("#whoAv").textContent=s?s.meta.code.slice(0,1).toUpperCase():"?";
+ if(st.view==="sesi"){renderBar();const m=$("#msgs");if(m)m.scrollTop=m.scrollHeight}}
+
+/* ---------- export ---------- */
+const csvQ=v=>{v=String(v??"");return/[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v};
+const folder=s=>`${s.meta.code.replace(/[^\w-]/g,"_")}_${stamp(s.createdAt)}`;
+function dassRow(s){const d=s.dass||score(s.ans);return[s.meta.code,new Date(s.createdAt).toISOString(),s.meta.age,s.meta.sex,s.meta.lang,s.meta.inst,s.order,...s.ans.map(v=>v??""),d.raw.D,d.raw.A,d.raw.S,LEV[d.lv.D],LEV[d.lv.A],LEV[d.lv.S],s.done?1:0]}
+const DH=["kode","waktu","usia","jenis_kelamin","bahasa_ibu","institusi","urutan",...ITEMS.map((_,i)=>"item"+(i+1)),"depresi","kecemasan","stres","kat_depresi","kat_kecemasan","kat_stres","lengkap"];
+const RH=["kode","tugas","nama_tugas","file","durasi_dtk","sample_rate","puncak","rms_dbfs","sr_asli","waktu"];
+const recRows=s=>TASKS.filter(t=>s.recs[t.id]).map(t=>{const r=s.recs[t.id];return[s.meta.code,t.id,t.name,`${folder(s)}/audio/${s.meta.code}_${t.id}.wav`,r.dur.toFixed(2),r.sr,r.peak,r.rmsDb,r.srcRate,new Date(r.ts).toISOString()]});
+const toCsv=(h,rows)=>[h,...rows].map(r=>r.map(csvQ).join(",")).join("\n");
+function addS(zip,s){const f=zip.folder(folder(s));TASKS.forEach(t=>{const r=s.recs[t.id];if(r)f.file(`audio/${s.meta.code}_${t.id}.wav`,r.blob)});
+ f.file("metadata.json",JSON.stringify({studi:cfg.study,kode:s.meta.code,identitas:s.meta,urutan:s.order,mulai:new Date(s.createdAt).toISOString(),selesai:s.finishedAt?new Date(s.finishedAt).toISOString():null,user_agent:s.ua,teks_bacaan:PASSAGE,rekaman:Object.fromEntries(Object.entries(s.recs).map(([k,r])=>[k,{durasi:r.dur,sample_rate:r.sr,puncak:r.peak,rms_dbfs:r.rmsDb,sr_asli:r.srcRate}])),dass21:{jawaban:s.ans,skor:s.dass}},null,2));
+ f.file("dass21.csv",toCsv(DH,[dassRow(s)]))}
+function save(blob,name){const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},2000)}
+async function zipIt(list,name){if(!window.JSZip){alertBox("ZIP tidak tersedia","Pustaka JSZip gagal dimuat (perlu internet saat membuka halaman). Muat ulang halaman saat online.");return}
+ const z=new JSZip();list.forEach(s=>addS(z,s));if(list.length>1){z.file("dass21_semua.csv",toCsv(DH,list.map(dassRow)));z.file("rekaman_semua.csv",toCsv(RH,list.flatMap(recRows)))}
+ save(await z.generateAsync({type:"blob"}),name)}
+function alertBox(t,b){$("#cTitle").textContent=t;$("#cBody").textContent=b;$("#cOk").style.display="none";$("#dlgConfirm").showModal()}
+
+/* ---------- events ---------- */
+let pendingDel=null;
+document.addEventListener("click",async ev=>{const t=ev.target.closest("button");if(!t)return;
+ if(t.hasAttribute("data-close")){t.closest("dialog").close();return}
+ if(t.closest("nav")&&t.dataset.v){if(st.recording)return;st.view=t.dataset.v;return render()}
+ if(t.dataset.go){st.view=t.dataset.go;return render()}
+ if(t.id==="helpBtn")return $("#dlgHelp").showModal();
+ if(["newBtn","newBtn2","newBtn3"].includes(t.id)){if(st.recording)return;["nCode","nAge","nLang","nInst","nMic"].forEach(i=>$("#"+i).value="");$("#nSex").value="";$("#nCons").checked=false;$("#nErr").textContent="";return $("#dlgNew").showModal()}
+ if(t.id==="toList"){st.list=true;return render()}
+ if(t.id==="nStart"){const g=i=>$("#"+i).value.trim();const meta={code:g("nCode"),age:g("nAge"),sex:g("nSex"),lang:g("nLang"),inst:g("nInst"),mic:g("nMic")};
+  if(!$("#nCons").checked){$("#nErr").textContent="Persetujuan responden wajib dicentang.";return}
+  if(!meta.code||!meta.age||!meta.sex){$("#nErr").textContent="Kode, usia, dan jenis kelamin wajib diisi.";return}
+  if(st.sessions.some(s=>s.meta.code.toLowerCase()===meta.code.toLowerCase())){$("#nErr").textContent="Kode responden ini sudah dipakai. Gunakan kode lain.";return}
+  const s={id:"s"+Date.now(),meta,createdAt:Date.now(),consentAt:Date.now(),order:cfg.order,steps:buildSteps(cfg.order),idx:0,log:[],recs:{},ans:Array(21).fill(null),done:false,ua:navigator.userAgent};
+  advance(s);st.sessions.push(s);st.cur=s.id;st.pending=null;st.list=false;st.view="sesi";await saveS(s);$("#dlgNew").close();return render()}
+ if(t.dataset.s){if(st.recording)return;st.cur=t.dataset.s;st.pending=null;st.list=false;return render()}
+ if(t.dataset.open){st.cur=t.dataset.open;st.view="sesi";st.pending=null;return render()}
+ if(t.id==="micBtn"){if(st.recording)await stopRec();else await startRec();return}
+ if(t.id==="retake"){st.pending=null;return renderBar()}
+ if(t.id==="send"){const s=curS(),step=stepAt(s),T=TASKS[step.i];s.recs[T.id]=st.pending;s.log.push({w:"me",rec:T.id});st.pending=null;s.idx++;advance(s);await saveS(s);return render()}
+ if(t.dataset.a){const s=curS(),step=stepAt(s),v=+t.dataset.a;s.ans[step.i]=v;s.log.push({w:"me",t:`${v} · ${SCALE[v]}`});s.idx++;advance(s);await saveS(s);return render()}
+ if(t.id==="undo"){const s=curS();s.log.pop();s.log.pop();s.log.pop();s.idx--;const p=stepAt(s);s.ans[p.i]=null;p.asked=false;s.steps[s.idx+1].asked=false;advance(s);await saveS(s);return render()}
+ if(t.dataset.zip){const s=st.sessions.find(x=>x.id===t.dataset.zip);return zipIt([s],folder(s)+".zip")}
+ if(t.id==="zipAll")return zipIt(st.sessions,`studi_suara_${stamp(Date.now())}.zip`);
+ if(t.id==="csvAll")return save(new Blob(["﻿"+toCsv(DH,st.sessions.map(dassRow))],{type:"text/csv"}),`dass21_${stamp(Date.now())}.csv`);
+ if(t.dataset.res){const s=st.sessions.find(x=>x.id===t.dataset.res);if(st.view!=="data"){st.view="data";render()}$("#res").innerHTML=result(s);$("#res").scrollIntoView({behavior:"smooth"});return}
+ if(t.dataset.del){pendingDel=t.dataset.del;const s=st.sessions.find(x=>x.id===pendingDel);$("#cTitle").textContent="Hapus sesi "+s.meta.code+"?";$("#cBody").textContent="Rekaman suara dan jawaban DASS-21 sesi ini akan dihapus permanen dari browser. Pastikan sudah diekspor.";$("#cOk").style.display="";return $("#dlgConfirm").showModal()}
+ if(t.id==="cOk"&&pendingDel){await delS(pendingDel);st.sessions=st.sessions.filter(s=>s.id!==pendingDel);if(st.cur===pendingDel)st.cur=null;pendingDel=null;$("#dlgConfirm").close();return render()}
+ if(t.id==="sSave"){cfg.study=$("#sStudy").value.trim()||cfg.study;cfg.sr=+$("#sSr").value;cfg.order=$("#sOrder").value;cfg.showResult=$("#sShow").checked;lsSet("ss-cfg",cfg);$("#sMsg").textContent="Pengaturan tersimpan.";return}
+ if(t.id==="micTest"){t.disabled=true;$("#micRes").innerHTML=`<p class="note">Merekam… bicaralah seperti biasa.</p>`;const keep=st.pending;await startRec();if(!st.recording){$("#micRes").innerHTML=`<p class="err">${esc(st.err)}</p>`;t.disabled=false;return}
+  setTimeout(async()=>{await stopRec();const p=st.pending;st.pending=keep;const w=quality(p,2);$("#micRes").innerHTML=`<div class="prev" style="margin-top:12px"><audio controls src="${urlOf(p.blob)}"></audio></div><p class="note">Puncak ${p.peak} · level ${p.rmsDb} dBFS · sampel asli ${p.srcRate} Hz</p>${w.length?w.map(x=>`<div class="warn">⚠ ${esc(x)}</div>`).join(""):`<p style="color:var(--ok);font-weight:700">Mikrofon baik dan siap digunakan.</p>`}`;t.disabled=false},3000);return}
+});
+window.addEventListener("beforeunload",e=>{if(st.recording){e.preventDefault();e.returnValue=""}});
+
+/* ---------- init ---------- */
+(async()=>{try{idb=await openDB();st.sessions=(await allS())||[];const open=st.sessions.filter(s=>!s.done).sort((a,b)=>b.createdAt-a.createdAt)[0];if(open)st.cur=open.id}catch(e){console.error(e)}
+ if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)setMic(false,"Butuh HTTPS/localhost");
+ else if(navigator.permissions){try{const p=await navigator.permissions.query({name:"microphone"});setMic(p.state!=="denied",p.state==="granted"?"Mikrofon siap":p.state==="denied"?"Mikrofon diblokir":"Mikrofon belum diizinkan")}catch(e){}}
+ render()})();
+}
+</script>
+</body>
+</html>

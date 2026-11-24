@@ -1,0 +1,6 @@
+{
+  "name": "Studi Suara & DASS-21",
+  "description": "Pusat pengambilan data penelitian suara dan kuesioner skrining psikologis DASS-21 berbasis percakapan interaktif.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
